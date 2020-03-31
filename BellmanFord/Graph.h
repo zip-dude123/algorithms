@@ -52,7 +52,8 @@ namespace WPAlgos
 
     private:
       std::unordered_map<uint32_t> m_nodes;
-      std::unordered_map<uint64_t,std::pair<bool, double>> m_edges;
+      std::unordered_map<uint64_t,bool> m_edges;
+      std::unordered_map<uint64_t,double> m_weights;
 
       uint32_t numNodes;
 

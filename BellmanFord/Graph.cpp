@@ -26,9 +26,10 @@ void PrimGraph::addEdge(uint64_t edge)
   m_edges[id] = true;
 }
 
-void PrimGraph::addEdge(uint64_t u, uint64_t v)
+void PrimGraph::addEdge(uint64_t u, uint64_t v, double weight)
 {
   m_edges[(u << 32) + (v & MASK64_32)] = true;
+  m_weights[(u << 32) + (v & MASK64_32)] = weight;
 }
 
 void PrimGraph::removeEdge(uint64_t edge)
@@ -60,9 +61,9 @@ BFRetStruct PrimGraph::BF(uint32_t u, uint32_t v)
       uint32_t u = (edge >> 32) & MASK64_32;
       uint32_t v = edge & MASK64_32;
 
-      if (distances[u] + m_edges[edge].second < distances[v])
+      if (distances[u] + m_weights[edge] < distances[v])
       {
-        distances[v] = distances[u] + m_edges[edge].second;
+        distances[v] = distances[u] + m_weights[edge];
         paths[v] = paths[u];
         paths[v].push_back(edge);
       }
