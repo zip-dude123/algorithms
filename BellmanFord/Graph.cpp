@@ -2,12 +2,15 @@
 
 #include <limits>
 #include <vector>
+#include <iostream>
 
 #include "Graph.h"
 
-#define MASK64_32  0x00000000FFFFFFFF;
+#define MASK64_32  0x00000000FFFFFFFF
 
 using namespace WPAlgos;
+
+PrimGraph::PrimGraph(): m_numNodes{0} {};
 
 void PrimGraph::addNode(uint32_t id)
 {
@@ -18,28 +21,31 @@ void PrimGraph::addNode(uint32_t id)
 void PrimGraph::removeNode(uint32_t id)
 {
   m_nodes[id] = false;
-  numNodes--;
+  m_numNodes--;
 }
 
-void PrimGraph::addEdge(uint64_t edge)
+void PrimGraph::addEdge(uint64_t edge, double weight)
 {
-  m_edges[id] = true;
+  m_edges[edge] = true;
+  m_weights[edge] = weight;
 }
 
-void PrimGraph::addEdge(uint64_t u, uint64_t v, double weight)
+void PrimGraph::addEdge(uint32_t u, uint32_t v, double weight)
 {
-  m_edges[(u << 32) + (v & MASK64_32)] = true;
-  m_weights[(u << 32) + (v & MASK64_32)] = weight;
+  uint64_t u64 = (uint64_t) u;
+  m_edges[(u64 << 32) + (v & MASK64_32)] = true;
+  m_weights[(u64 << 32) + (v & MASK64_32)] = weight;
 }
 
 void PrimGraph::removeEdge(uint64_t edge)
 {
-  m_edges[id] = false;
+  m_edges[edge] = false;
 }
 
-void PrimGraph::removeEdge(uint64_t u, uint64_t v)
+void PrimGraph::removeEdge(uint32_t u, uint32_t v)
 {
-  m_edges[(u << 32) + (v & MASK64_32)] = false;
+  uint64_t u64 = (uint64_t) u;
+  m_edges[(u64 << 32) + (v & MASK64_32)] = false;
 }
 
 BFRetStruct PrimGraph::BF(uint32_t u, uint32_t v)
@@ -49,15 +55,18 @@ BFRetStruct PrimGraph::BF(uint32_t u, uint32_t v)
   //set distances to +inf
   std::unordered_map<uint32_t, double> distances;
   std::unordered_map<uint32_t, std::vector<uint32_t>> paths;
-  for (uint32_t i : m_nodes)
+  std::cout << m_numNodes << std::endl;
+  for (uint32_t i = 0; i < m_numNodes; i++)
   {
-    if (m_nodes[i]) distances[i] = std::numeric_limits<double>::max;
+    if (m_nodes[i]) distances[i] = std::numeric_limits<double>::max();
   }
+  distances[u] = 0;
 
-  for (uint32_t i : numNodes)
+  for (uint32_t i = 0; i < m_numNodes; i++)
   {
-    for (uint64_t edge : m_edges)
+    for (auto it : m_edges)
     {
+      uint64_t edge = it.first;
       uint32_t u = (edge >> 32) & MASK64_32;
       uint32_t v = edge & MASK64_32;
 

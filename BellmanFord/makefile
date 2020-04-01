@@ -1,7 +1,7 @@
 BellmanFord : main.o Graph.o
-
+				clang++ -o BellmanFord main.o Graph.o
 main.o : main.cpp Graph.h
-				clang++ main.c
+				clang++ -c -std=c++17 main.cpp
 
-Graph.h : Graph.cpp Graph.h
-				clang++ Graph.cpp
+Graph.o : Graph.cpp Graph.h
+				clang++ -c -std=c++17 Graph.cpp

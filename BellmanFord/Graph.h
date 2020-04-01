@@ -2,6 +2,7 @@
 #define WPGRAPH_H
 
 #include <unordered_map>
+#include <vector>
 
 namespace WPAlgos
 {/*
@@ -39,23 +40,28 @@ namespace WPAlgos
   class PrimGraph
   {
     public:
+      PrimGraph();
+
       void addNode(uint32_t id);
       void removeNode(uint32_t id);
 
-      void addEdge(uint64_t edge);
-      void addEdge(uint32_t u, uint32_t v);
+      void addEdge(uint64_t edge, double weight);
+      void addEdge(uint32_t u, uint32_t v, double weight);
       void removeEdge(uint64_t edge);
       void removeEdge(uint32_t u, uint32_t v);
+
+      BFRetStruct BF(uint32_t u, uint32_t v);
+      BFRetStruct BF(uint32_t u);
 
 
 
 
     private:
-      std::unordered_map<uint32_t> m_nodes;
+      std::unordered_map<uint32_t,bool> m_nodes;
       std::unordered_map<uint64_t,bool> m_edges;
       std::unordered_map<uint64_t,double> m_weights;
 
-      uint32_t numNodes;
+      uint32_t m_numNodes;
 
   };
 
